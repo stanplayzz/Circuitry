@@ -1,6 +1,6 @@
 #include "game.hpp"
 
-Game::Game() {
+Game::Game() : fps(font) {
 	window.create(sf::VideoMode({ 1280, 720 }), "I'll change this later", sf::Style::Close);
 	uiView = window.getDefaultView();
 	world = std::make_unique<World>(*this);
@@ -8,11 +8,26 @@ Game::Game() {
 	window.setView(view);
 	originalViewSize = view.getSize();
 
+	font.openFromFile(ASSETS_DIR + std::string("/fonts/Roboto.ttf"));
+	fps.setCharacterSize(30);
+	fps.setFillColor(sf::Color::Black);
+
 	run();
 }
 
 void Game::run() {
+	sf::Clock clock;
+	int frameCount = 0;
+	int cfps = 0.f;
 	while (window.isOpen()) {
+		frameCount++;
+		if (clock.getElapsedTime().asSeconds() >= 1.f) {
+			cfps = frameCount / clock.getElapsedTime().asSeconds();
+			clock.restart();
+			frameCount = 0;
+			fps.setString(std::to_string(cfps));
+		}
+
 		handleInput();
 		
 		world->update(window);
@@ -20,6 +35,10 @@ void Game::run() {
 		window.clear(sf::Color(75, 75, 200));
 
 		world->draw(window, *this);
+		window.setView(uiView);
+		window.draw(fps);
+		window.setView(view);
+
 
 		window.display();
 	}

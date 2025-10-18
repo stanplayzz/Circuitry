@@ -1,11 +1,13 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
+class Node;
+
 struct Port {
 	sf::Vector2f offset{};
 	bool isInput = false;
 	sf::CircleShape shape{};
-
+	Node* parentNode = nullptr;
 	bool contains(sf::Vector2f position) const;
 };
 
@@ -18,6 +20,7 @@ public:
 	Node(sf::Vector2f position, sf::Texture& image, const int iPorts = 0, const int oPorts = 0);
 	void setPosition(sf::Vector2f position);
 	sf::Vector2f getPosition() const;
+	sf::FloatRect getGlobalBounds() const;
 	bool contains(sf::Vector2f position) const;
 	void draw(sf::RenderWindow& window);
 

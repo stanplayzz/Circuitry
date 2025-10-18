@@ -24,7 +24,7 @@ World::World(Game& game) {
 }
 
 void World::update(sf::RenderWindow& window) {
-	playerHandler->update(window);
+	playerHandler->update(window, nodeManager);
 }
 
 void World::onEvent(sf::Event& event, sf::RenderWindow& window) {

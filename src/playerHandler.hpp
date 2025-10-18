@@ -6,11 +6,12 @@
 
 class Game;
 class World;
+class NodeManager;
 
 class PlayerHandler {
 public:
 	PlayerHandler(Game& game);
-	void update(sf::RenderWindow& window);
+	void update(sf::RenderWindow& window, NodeManager& nodeManager);
 	void onEvent(sf::Event& event, sf::RenderWindow& window, World& world);
 
 	Node* currentNode = nullptr;

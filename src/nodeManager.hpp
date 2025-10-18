@@ -7,14 +7,13 @@ struct Connection {
 	Node* toNode;
 	Port* fromPort;
 	Port* toPort;
-	sf::VertexArray line;
+	sf::VertexArray line{ sf::PrimitiveType::LineStrip };
 
 	Connection(Node* f, Node* t,Port* fPort, Port* tPort)
 		: fromNode(f), toNode(t), fromPort(fPort), toPort(tPort) {
-		line.setPrimitiveType(sf::PrimitiveType::LineStrip);
-		line.resize(4);
 	}
 
+	void reConnect();
 	void draw(sf::RenderWindow& window);
 };
 
@@ -23,6 +22,10 @@ class NodeManager {
 public:
 	NodeManager();
 	void createConnection(Node* nA, Node* nB, Port* pA, Port* pB);
+	void removeConnection(Connection* connection);
+
+	void updateNode(Node* node);
+	std::vector<Connection*> getNodeConnections(Node* node) const;
 
 	std::vector<Node> nodes;
 	std::vector<Connection> connections;

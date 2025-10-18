@@ -17,6 +17,7 @@ Node::Node(sf::Vector2f position, sf::Texture& texture, const int iPorts, const 
 	for (auto& port : ports) {
 		port.shape.setRadius(8.f);
 		port.shape.setFillColor(port.isInput ? sf::Color::Green : sf::Color::Red);
+		port.parentNode = this;
 	}
 
 	setPosition(position);
@@ -49,4 +50,8 @@ void Node::draw(sf::RenderWindow& window) {
 
 [[nodiscard]] bool Port::contains(sf::Vector2f position) const {
 	return shape.getGlobalBounds().contains(position);
+}
+
+[[nodiscard]] sf::FloatRect Node::getGlobalBounds() const {
+	return background.getGlobalBounds();
 }

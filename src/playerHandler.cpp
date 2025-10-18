@@ -7,10 +7,11 @@ PlayerHandler::PlayerHandler(Game& game) : game(game) {
 
 }
 
-void PlayerHandler::update(sf::RenderWindow& window) {
+void PlayerHandler::update(sf::RenderWindow& window, NodeManager& nodeManager) {
 	if (dragging && currentNode) {
 		auto mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 		currentNode->setPosition(mousePos - dragOffset);
+		nodeManager.updateNode(currentNode);
 	}
 }
 
@@ -59,17 +60,64 @@ void PlayerHandler::onEvent(sf::Event& event, sf::RenderWindow& window, World& w
 				dragging = false;
 
 				if (!world.inventory->inventory.getGlobalBounds().contains(uiMousePos)) {
-					sf::Vector2f gridPos(std::round((mousePos.x - dragOffset.x) / game.world->tile_size),
-										 std::round((mousePos.y - dragOffset.y) / game.world->tile_size));
-					currentNode->setPosition(gridPos * game.world->tile_size);
-					currentNode->inWorld = true;
-					world.inventory->update(world);
+					const float padding = 32.f;
+					const float tile = game.world->tile_size;
+
+					sf::Vector2f gridPos(
+						std::round((mousePos.x - dragOffset.x) / tile) * tile,
+						std::round((mousePos.y - dragOffset.y) / tile) * tile
+					);
+
+					sf::FloatRect newBounds(
+						gridPos - sf::Vector2f(padding, padding),
+						currentNode->size + sf::Vector2f(padding * 2.f, padding * 2.f)
+					);
+
+					auto rectsOverlap = [](const sf::FloatRect& a, const sf::FloatRect& b) -> bool {
+						return a.position.x < b.position.x + b.size.x &&
+							a.position.x + a.size.x > b.position.x &&
+							a.position.y < b.position.y + b.size.y &&
+							a.position.y + a.size.y > b.position.y;
+						};
+
+					bool canPlace = true;
+					for (auto& node : world.nodeManager.nodes) {
+						if (&node == currentNode) continue;
+						if (!node.inWorld) continue;
+
+						if (rectsOverlap(newBounds, node.getGlobalBounds())) {
+							canPlace = false;
+							break;
+						}
+					}
+
+					if (canPlace) {
+						currentNode->setPosition(gridPos);
+						currentNode->inWorld = true;
+						world.inventory->update(world);
+					}
+					else {
+						// cannot place here: remove from world
+						currentNode->inWorld = false;
+						world.inventory->update(world);
+
+						auto connectionsToRemove = world.nodeManager.getNodeConnections(currentNode);
+						for (int i = connectionsToRemove.size() - 1; i >= 0; --i) {
+							world.nodeManager.removeConnection(connectionsToRemove[i]);
+						}
+					}
 				}
 				else {
+					// in inventory
 					currentNode->inWorld = false;
 					world.inventory->update(world);
+					auto connectionsToRemove = world.nodeManager.getNodeConnections(currentNode);
+					for (int i = connectionsToRemove.size() - 1; i >= 0; --i) {
+						world.nodeManager.removeConnection(connectionsToRemove[i]);
+					}
 				}
 
+				world.nodeManager.updateNode(currentNode);
 				currentNode = nullptr;
 			}
 			else if (currentPort) {
@@ -77,14 +125,14 @@ void PlayerHandler::onEvent(sf::Event& event, sf::RenderWindow& window, World& w
 					if (node.inWorld && &node != currentNode) {
 						for (auto& port : node.ports) {
 							if (port.contains(mousePos)) {
-								world.nodeManager.createConnection(currentNode, &node, currentPort, &port);
-								std::println("yes");
+								if (!currentPort->isInput == port.isInput) {
+									world.nodeManager.createConnection(currentNode, &node, currentPort, &port);
+								}
 							}
 						}
 					}
 				}
 			}
 		}
-		
 	}
 }

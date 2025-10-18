@@ -17,6 +17,8 @@ public:
 
 	float currentZoom = 1.f;
 private:
+	sf::Font font;
+	sf::Text fps;
 
 	sf::Vector2i prevMouse;
 	bool panning = false;
