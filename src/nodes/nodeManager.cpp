@@ -1,16 +1,14 @@
-#include "nodeManager.hpp"
+#include "nodes/nodeManager.hpp"
+#include "nodes/variations/converter.hpp"
+#include "nodes/variations/producer.hpp"
 
 #include <print>
 
 NodeManager::NodeManager() {
 	temp.loadFromFile(ASSETS_DIR + std::string("/textures/machine.png"));
-
-	Node node(sf::Vector2f(512.f, 512.f), temp, 1, 2);
-	nodes.push_back(node);
-
-	Node nodey(sf::Vector2f(512.f, 512.f), temp, 1, 1);
-	nodes.push_back(nodey);
-	
+	font.openFromFile(ASSETS_DIR + std::string("/fonts/Roboto.ttf"));
+	nodes.push_back(std::make_unique<Converter>(temp, *this));
+	nodes.push_back(std::make_unique<Producer>(temp, *this));
 }
 
 void NodeManager::createConnection(Node* nA, Node* nB, Port* pA, Port* pB) {
@@ -127,4 +125,10 @@ void NodeManager::removeConnection(Connection* connection) {
 			return &conn == connection;
 		}),
 		connections.end());
+}
+
+void NodeManager::update(sf::Time deltaTime) {
+	for (auto& node : nodes) {
+		node->update(deltaTime);
+	}
 }

@@ -1,7 +1,7 @@
 #pragma once
 #include "playerHandler.hpp"
-#include "nodeManager.hpp"
-#include "node.hpp"
+#include "nodes/nodeManager.hpp"
+#include "nodes/node.hpp"
 
 #include <SFML/Graphics.hpp>
 
@@ -10,7 +10,7 @@ class Game;
 class World {
 public:
 	World(Game& game);
-	void update(sf::RenderWindow& window);
+	void update(sf::RenderWindow& window, sf::Time deltaTime);
 	void onEvent(sf::Event& event, sf::RenderWindow& window);
 	void draw(sf::RenderWindow& window, Game& game);
 

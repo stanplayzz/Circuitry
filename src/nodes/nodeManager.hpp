@@ -1,4 +1,4 @@
-#include "node.hpp"
+#include "nodes/node.hpp"
 
 class NodeManager;
 
@@ -23,12 +23,13 @@ public:
 	NodeManager();
 	void createConnection(Node* nA, Node* nB, Port* pA, Port* pB);
 	void removeConnection(Connection* connection);
-
+	void update(sf::Time deltaTime);
 	void updateNode(Node* node);
 	std::vector<Connection*> getNodeConnections(Node* node) const;
 
-	std::vector<Node> nodes;
+	std::vector<std::unique_ptr<Node>> nodes;
 	std::vector<Connection> connections;
+	sf::Font font;
 private:
 	sf::Texture temp;
 

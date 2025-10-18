@@ -21,8 +21,8 @@ Inventory::Inventory(Game& game) {
 void Inventory::update(World& world) {
 	int index = 0;
 	for (auto& node : world.nodeManager.nodes) {
-		if (!node.inWorld) {
-			node.setPosition(world.inventory->inventory.getPosition() + sf::Vector2f(index * 144.f + 16.f, 16.f));
+		if (!node->inWorld) {
+			node->setPosition(world.inventory->inventory.getPosition() + sf::Vector2f(index * 144.f + 16.f, 16.f));
 			index++;
 		}
 	}

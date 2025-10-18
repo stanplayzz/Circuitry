@@ -1,6 +1,6 @@
 #pragma once
 #include "inventory.hpp"
-#include "node.hpp"
+#include "nodes/node.hpp"
 
 #include <SFML/Graphics.hpp>
 

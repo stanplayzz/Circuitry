@@ -22,28 +22,28 @@ void PlayerHandler::onEvent(sf::Event& event, sf::RenderWindow& window, World& w
 	if (auto mouse = event.getIf<sf::Event::MouseButtonPressed>()) {
 		if (mouse->button == sf::Mouse::Button::Left) {
 			for (auto& node : world.nodeManager.nodes) {
-				if (node.inWorld) {
+				if (node->inWorld) {
 					bool overPort = false;
-					for (auto& port : node.ports) {
+					for (auto& port : node->ports) {
 						if (port.contains(mousePos)) {
 							overPort = true;
 							currentPort = &port;
-							currentNode = &node;
+							currentNode = node.get();
 							break;
 						}
 					}
 					if (overPort) break;
 					
-					if (node.contains(mousePos)) {
-						currentNode = &node;
+					if (node->contains(mousePos)) {
+						currentNode = node.get();
 						dragging = true;
 						dragOffset = mousePos - currentNode->getPosition();
 						break;
 					}
 				}
 				else {
-					if (node.contains(uiMousePos)) {
-						currentNode = &node;
+					if (node->contains(uiMousePos)) {
+						currentNode = node.get();
 						dragging = true;
 						dragOffset = uiMousePos - currentNode->getPosition();
 						currentNode->inWorld = true;
@@ -82,10 +82,10 @@ void PlayerHandler::onEvent(sf::Event& event, sf::RenderWindow& window, World& w
 
 					bool canPlace = true;
 					for (auto& node : world.nodeManager.nodes) {
-						if (&node == currentNode) continue;
-						if (!node.inWorld) continue;
+						if (node.get() == currentNode) continue;
+						if (!node->inWorld) continue;
 
-						if (rectsOverlap(newBounds, node.getGlobalBounds())) {
+						if (rectsOverlap(newBounds, node->getGlobalBounds())) {
 							canPlace = false;
 							break;
 						}
@@ -97,7 +97,7 @@ void PlayerHandler::onEvent(sf::Event& event, sf::RenderWindow& window, World& w
 						world.inventory->update(world);
 					}
 					else {
-						// cannot place here: remove from world
+						// cannot place here
 						currentNode->inWorld = false;
 						world.inventory->update(world);
 
@@ -122,11 +122,11 @@ void PlayerHandler::onEvent(sf::Event& event, sf::RenderWindow& window, World& w
 			}
 			else if (currentPort) {
 				for (auto& node : world.nodeManager.nodes) {
-					if (node.inWorld && &node != currentNode) {
-						for (auto& port : node.ports) {
+					if (node->inWorld && node.get() != currentNode) {
+						for (auto& port : node->ports) {
 							if (port.contains(mousePos)) {
 								if (!currentPort->isInput == port.isInput) {
-									world.nodeManager.createConnection(currentNode, &node, currentPort, &port);
+									world.nodeManager.createConnection(currentNode, node.get(), currentPort, &port);
 								}
 							}
 						}

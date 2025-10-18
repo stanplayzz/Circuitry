@@ -16,21 +16,23 @@ Game::Game() : fps(font) {
 }
 
 void Game::run() {
-	sf::Clock clock;
+	sf::Clock fpsClock;
+	sf::Clock deltaClock;
 	int frameCount = 0;
 	int cfps = 0.f;
 	while (window.isOpen()) {
+		sf::Time deltaTime = deltaClock.restart();
 		frameCount++;
-		if (clock.getElapsedTime().asSeconds() >= 1.f) {
-			cfps = frameCount / clock.getElapsedTime().asSeconds();
-			clock.restart();
+		if (fpsClock.getElapsedTime().asSeconds() >= 1.f) {
+			cfps = frameCount / fpsClock.getElapsedTime().asSeconds();
+			fpsClock.restart();
 			frameCount = 0;
 			fps.setString(std::to_string(cfps));
 		}
 
 		handleInput();
 		
-		world->update(window);
+		world->update(window, deltaTime);
 
 		window.clear(sf::Color(75, 75, 200));
 

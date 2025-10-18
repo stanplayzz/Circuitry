@@ -1,9 +1,13 @@
-#include "node.hpp"
+#include "nodes/node.hpp"
+#include "nodes/nodeManager.hpp"
 
-Node::Node(sf::Vector2f position, sf::Texture& texture, const int iPorts, const int oPorts) : image(texture) {
+Node::Node(sf::Texture& texture, NodeManager& nodeManager, const int iPorts, const int oPorts)
+	: image(texture), font(nodeManager.font), quantity(font), nodeManager(nodeManager) {
 	background.setSize(size);
 	background.setFillColor(sf::Color(40, 40, 40));
 	image.setScale({ 0.2f, 0.2f });
+	quantity.setCharacterSize(30.f);
+	quantity.setFillColor(sf::Color(200, 200, 200));
 
 	for (int i = 0; i < iPorts; i++) {
 		float y = (i + 1) * size.y / (iPorts + 1);
@@ -20,13 +24,17 @@ Node::Node(sf::Vector2f position, sf::Texture& texture, const int iPorts, const 
 		port.parentNode = this;
 	}
 
-	setPosition(position);
+	setPosition({ 0.f, 0.f });
 }
 
 void Node::setPosition(sf::Vector2f position) {
 	background.setPosition(position);
 	auto offset = (size.x - 512.f * image.getScale().x) / 2.f;
 	image.setPosition(position + sf::Vector2f(offset, offset));
+
+	auto bounds = quantity.getLocalBounds();
+	quantity.setOrigin({ bounds.position.x + bounds.size.x / 2.f, bounds.position.y + bounds.size.y / 2.f });
+	quantity.setPosition({ position + size / 2.f });
 
 	for (auto& port : ports) {
 		port.shape.setPosition(position + port.offset - sf::Vector2f(port.shape.getRadius(), port.shape.getRadius()));
@@ -44,6 +52,7 @@ void Node::setPosition(sf::Vector2f position) {
 void Node::draw(sf::RenderWindow& window) {
 	window.draw(background);
 	window.draw(image);
+	window.draw(quantity);
 	for (auto& port : ports)
 		window.draw(port.shape);
 }

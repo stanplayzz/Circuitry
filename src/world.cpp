@@ -23,8 +23,9 @@ World::World(Game& game) {
 	inventory->update(*this);
 }
 
-void World::update(sf::RenderWindow& window) {
+void World::update(sf::RenderWindow& window, sf::Time deltaTime) {
 	playerHandler->update(window, nodeManager);
+	nodeManager.update(deltaTime);
 }
 
 void World::onEvent(sf::Event& event, sf::RenderWindow& window) {
@@ -35,8 +36,8 @@ void World::draw(sf::RenderWindow& window, Game& game) {
 	window.draw(grid);
 
 	for (auto& node : nodeManager.nodes) {
-		if (node.inWorld) {
-			node.draw(window);
+		if (node->inWorld) {
+			node->draw(window);
 		}
 	}
 	for (auto& connection : nodeManager.connections) {
@@ -47,8 +48,8 @@ void World::draw(sf::RenderWindow& window, Game& game) {
 
 	window.setView(game.uiView);
 	for (auto& node : nodeManager.nodes) {
-		if (!node.inWorld) {
-			node.draw(window);
+		if (!node->inWorld) {
+			node->draw(window);
 		}
 	}
 	window.setView(game.view);
