@@ -118,7 +118,6 @@ void PlayerHandler::onEvent(sf::Event& event, sf::RenderWindow& window, World& w
 				}
 
 				world.nodeManager.updateNode(currentNode);
-				currentNode = nullptr;
 			}
 			else if (currentPort) {
 				for (auto& node : world.nodeManager.nodes) {
@@ -133,6 +132,7 @@ void PlayerHandler::onEvent(sf::Event& event, sf::RenderWindow& window, World& w
 					}
 				}
 			}
+			currentNode = nullptr;
 		}
 	}
 }

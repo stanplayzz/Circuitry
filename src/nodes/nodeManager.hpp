@@ -1,6 +1,8 @@
 #include "nodes/node.hpp"
+#include "nodes/nodeInfo.hpp"
 
 class NodeManager;
+class World;
 
 struct Connection {
 	Node* fromNode;
@@ -25,6 +27,7 @@ public:
 	void removeConnection(Connection* connection);
 	void update(sf::Time deltaTime);
 	void updateNode(Node* node);
+	void onEvent(sf::Event& event, World& world);
 	std::vector<Connection*> getNodeConnections(Node* node) const;
 
 	std::vector<std::unique_ptr<Node>> nodes;
@@ -32,5 +35,5 @@ public:
 	sf::Font font;
 private:
 	sf::Texture temp;
-
+	NodeInfo nodeInfo;
 };

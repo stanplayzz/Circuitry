@@ -1,6 +1,7 @@
 #include "nodes/nodeManager.hpp"
-#include "nodes/variations/converter.hpp"
-#include "nodes/variations/producer.hpp"
+#include "nodes/types/converter.hpp"
+#include "nodes/types/variations/ironMine.hpp"
+#include "world.hpp"
 
 #include <print>
 
@@ -8,7 +9,7 @@ NodeManager::NodeManager() {
 	temp.loadFromFile(ASSETS_DIR + std::string("/textures/machine.png"));
 	font.openFromFile(ASSETS_DIR + std::string("/fonts/Roboto.ttf"));
 	nodes.push_back(std::make_unique<Converter>(temp, *this));
-	nodes.push_back(std::make_unique<Producer>(temp, *this));
+	nodes.push_back(std::make_unique<IronMine>(temp, *this));
 }
 
 void NodeManager::createConnection(Node* nA, Node* nB, Port* pA, Port* pB) {
@@ -131,4 +132,8 @@ void NodeManager::update(sf::Time deltaTime) {
 	for (auto& node : nodes) {
 		node->update(deltaTime);
 	}
+}
+
+void NodeManager::onEvent(sf::Event& event, World& world) {
+	//use the world pointer (not the culprit)
 }

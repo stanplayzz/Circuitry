@@ -30,18 +30,19 @@ void World::update(sf::RenderWindow& window, sf::Time deltaTime) {
 
 void World::onEvent(sf::Event& event, sf::RenderWindow& window) {
 	playerHandler->onEvent(event, window, *this);
+	nodeManager.onEvent(event, *this);
 }
 
 void World::draw(sf::RenderWindow& window, Game& game) {
 	window.draw(grid);
 
-	for (auto& node : nodeManager.nodes) {
-		if (node->inWorld) {
-			node->draw(window);
-		}
-	}
 	for (auto& connection : nodeManager.connections) {
 		connection.draw(window);
+	}
+	for (auto& node : nodeManager.nodes) {
+		if (node->inWorld && playerHandler->currentNode != node.get()) {
+			node->draw(window);
+		}
 	}
 
 	inventory->draw(window, game);
@@ -53,5 +54,7 @@ void World::draw(sf::RenderWindow& window, Game& game) {
 		}
 	}
 	window.setView(game.view);
+	if (playerHandler->currentNode)
+		playerHandler->currentNode->draw(window);
 
 }
