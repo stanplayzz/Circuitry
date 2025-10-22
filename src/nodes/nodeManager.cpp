@@ -1,15 +1,17 @@
 #include "nodes/nodeManager.hpp"
-#include "nodes/types/converter.hpp"
+#include "nodes/types/variations/smelter.hpp"
 #include "nodes/types/variations/ironMine.hpp"
-#include "world.hpp"
+#include "../playerHandler.hpp"
+#include "../game.hpp"
 
 #include <print>
 
 NodeManager::NodeManager() {
 	temp.loadFromFile(ASSETS_DIR + std::string("/textures/machine.png"));
 	font.openFromFile(ASSETS_DIR + std::string("/fonts/Roboto.ttf"));
-	nodes.push_back(std::make_unique<Converter>(temp, *this));
 	nodes.push_back(std::make_unique<IronMine>(temp, *this));
+	nodes.push_back(std::make_unique<IronMine>(temp, *this));
+	nodes.push_back(std::make_unique<Smelter>(temp, *this));
 }
 
 void NodeManager::createConnection(Node* nA, Node* nB, Port* pA, Port* pB) {
@@ -128,12 +130,22 @@ void NodeManager::removeConnection(Connection* connection) {
 		connections.end());
 }
 
-void NodeManager::update(sf::Time deltaTime) {
+void NodeManager::update(sf::Time deltaTime, sf::RenderWindow& window) {
 	for (auto& node : nodes) {
 		node->update(deltaTime);
 	}
 }
 
-void NodeManager::onEvent(sf::Event& event, World& world) {
-	//use the world pointer (not the culprit)
+void NodeManager::onEvent(sf::Event& event, sf::RenderWindow& window, World& world) {
+}
+
+void NodeManager::draw(sf::RenderWindow& window, Game& game) {
+	for (auto& connection : connections) {
+		connection.draw(window);
+	}
+	for (auto& node : nodes) {
+		if (node->inWorld && game.world->playerHandler->currentNode != node.get()) {
+			node->draw(window);
+		}
+	}
 }

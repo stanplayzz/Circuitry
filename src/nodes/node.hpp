@@ -6,6 +6,7 @@
 
 class Node;
 class NodeManager;
+enum struct NodeType;
 
 struct Port {
 	sf::Vector2f offset{};
@@ -18,6 +19,7 @@ struct Port {
 class Node {
 public:
 	bool inWorld = false;
+	bool dragging = false;
 	sf::Vector2f size{128.f, 192.f};
 	std::vector<Port> ports;
 
@@ -26,6 +28,8 @@ public:
 	sf::Vector2f getPosition() const;
 	sf::FloatRect getGlobalBounds() const;
 	bool contains(sf::Vector2f position) const;
+	virtual void setDerivedPosition(sf::Vector2f position) = 0;
+	virtual void drawDerived(sf::RenderWindow& window) = 0;
 	virtual void update(sf::Time deltaTime) = 0;
 	void draw(sf::RenderWindow& window);
 
@@ -36,6 +40,7 @@ protected:
 	sf::Sprite image;
 	sf::Font& font;
 	sf::Text quantityText;
+	sf::Text nameText;
 private:
 	sf::RectangleShape background{};
 };

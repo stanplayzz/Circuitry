@@ -15,10 +15,18 @@ FetchContent_Declare(SFML
 
 FetchContent_MakeAvailable(SFML)
 
+# ultimate shapes
+FetchContent_Declare(
+    ultimateshapes
+    GIT_REPOSITORY https://github.com/stanplayzz/UltimateShapes
+    GIT_TAG v1.2
+)
+FetchContent_MakeAvailable(ultimateshapes)
+
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 
 add_executable(main ${SOURCES})
 target_compile_features(main PRIVATE cxx_std_23)
 target_compile_definitions(main PRIVATE ASSETS_DIR="${PROJECT_SOURCE_DIR}/assets")
-target_link_libraries(main PRIVATE SFML::Graphics)
+target_link_libraries(main PRIVATE SFML::Graphics ultimateshapes)
 target_include_directories(main PRIVATE ${PROJECT_SOURCE_DIR}/src)

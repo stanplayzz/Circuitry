@@ -1,4 +1,5 @@
 #include "playerHandler.hpp"
+#include "nodes/types/converter.hpp"
 #include "game.hpp"
 
 #include <print>
@@ -33,18 +34,27 @@ void PlayerHandler::onEvent(sf::Event& event, sf::RenderWindow& window, World& w
 						}
 					}
 					if (overPort) break;
-					
+
 					if (node->contains(mousePos)) {
-						currentNode = node.get();
-						dragging = true;
-						dragOffset = mousePos - currentNode->getPosition();
-						break;
+						Converter* converter = dynamic_cast<Converter*>(node.get());
+						if (converter && converter->configureButton.getGlobalBounds().contains(mousePos)) {
+							converter->toggleConfig();
+							break;
+						}
+						else {
+							currentNode = node.get();
+							dragging = true;
+							node->dragging = true;
+							dragOffset = mousePos - currentNode->getPosition();
+							break;
+						}
 					}
 				}
 				else {
-					if (node->contains(uiMousePos)) {
+					if (node->contains(uiMousePos) && world.toolbar->inventory->inventory.getPosition() == world.toolbar->inventory->targetPos) {
 						currentNode = node.get();
 						dragging = true;
+						node->dragging = true;
 						dragOffset = uiMousePos - currentNode->getPosition();
 						currentNode->inWorld = true;
 						break;
@@ -53,13 +63,13 @@ void PlayerHandler::onEvent(sf::Event& event, sf::RenderWindow& window, World& w
 			}
 		}
 	}
-
 	if (auto mouse = event.getIf<sf::Event::MouseButtonReleased>()) {
 		if (mouse->button == sf::Mouse::Button::Left) {
 			if (dragging && currentNode) {
 				dragging = false;
+				currentNode->dragging = false;
 
-				if (!world.inventory->inventory.getGlobalBounds().contains(uiMousePos)) {
+				if (!world.toolbar->inventory->inventory.getGlobalBounds().contains(uiMousePos)) {
 					const float padding = 32.f;
 					const float tile = game.world->tile_size;
 
@@ -94,12 +104,10 @@ void PlayerHandler::onEvent(sf::Event& event, sf::RenderWindow& window, World& w
 					if (canPlace) {
 						currentNode->setPosition(gridPos);
 						currentNode->inWorld = true;
-						world.inventory->update(world);
 					}
 					else {
 						// cannot place here
 						currentNode->inWorld = false;
-						world.inventory->update(world);
 
 						auto connectionsToRemove = world.nodeManager.getNodeConnections(currentNode);
 						for (int i = connectionsToRemove.size() - 1; i >= 0; --i) {
@@ -110,7 +118,6 @@ void PlayerHandler::onEvent(sf::Event& event, sf::RenderWindow& window, World& w
 				else {
 					// in inventory
 					currentNode->inWorld = false;
-					world.inventory->update(world);
 					auto connectionsToRemove = world.nodeManager.getNodeConnections(currentNode);
 					for (int i = connectionsToRemove.size() - 1; i >= 0; --i) {
 						world.nodeManager.removeConnection(connectionsToRemove[i]);

@@ -7,6 +7,7 @@ Game::Game() : fps(font) {
 	view = sf::View(sf::FloatRect(sf::Vector2f(world->world_grid_size * (int)world->tile_size) / 2.f, sf::Vector2f(window.getSize())));
 	window.setView(view);
 	originalViewSize = view.getSize();
+	window.setVerticalSyncEnabled(true);
 
 	font.openFromFile(ASSETS_DIR + std::string("/fonts/Roboto.ttf"));
 	fps.setCharacterSize(30);

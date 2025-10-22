@@ -1,5 +1,5 @@
 #pragma once
-#include "inventory.hpp"
+#include "toolbar/inventory.hpp"
 #include "world.hpp"
 
 #include <SFML/Graphics.hpp>

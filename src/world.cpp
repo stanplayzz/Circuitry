@@ -5,7 +5,7 @@ auto gridColor = sf::Color(255, 255, 255, 25);
 
 World::World(Game& game) {
 	playerHandler = std::make_unique<PlayerHandler>(game);
-	inventory = std::make_unique<Inventory>(game);
+	toolbar = std::make_unique<Toolbar>(game);
 
 	grid.setPrimitiveType(sf::PrimitiveType::Lines);
 
@@ -17,44 +17,27 @@ World::World(Game& game) {
 		grid.append(sf::Vertex({ 0.f, y * tile_size }, gridColor));
 		grid.append(sf::Vertex({ (float)world_grid_size.y * tile_size, y * tile_size }, gridColor));
 	}
-
-
-
-	inventory->update(*this);
 }
 
 void World::update(sf::RenderWindow& window, sf::Time deltaTime) {
 	playerHandler->update(window, nodeManager);
-	nodeManager.update(deltaTime);
+	nodeManager.update(deltaTime,  window);
+	toolbar->update(deltaTime, *this);
 }
 
 void World::onEvent(sf::Event& event, sf::RenderWindow& window) {
+	nodeManager.onEvent(event, window, *this);
 	playerHandler->onEvent(event, window, *this);
-	nodeManager.onEvent(event, *this);
+	toolbar->onEvent(event, window);
 }
 
 void World::draw(sf::RenderWindow& window, Game& game) {
 	window.draw(grid);
 
-	for (auto& connection : nodeManager.connections) {
-		connection.draw(window);
-	}
-	for (auto& node : nodeManager.nodes) {
-		if (node->inWorld && playerHandler->currentNode != node.get()) {
-			node->draw(window);
-		}
-	}
+	nodeManager.draw(window, game);
 
-	inventory->draw(window, game);
-
-	window.setView(game.uiView);
-	for (auto& node : nodeManager.nodes) {
-		if (!node->inWorld) {
-			node->draw(window);
-		}
-	}
-	window.setView(game.view);
-	if (playerHandler->currentNode)
-		playerHandler->currentNode->draw(window);
-
+	toolbar->draw(window, game);
+	// draw nodes that should be on top of everything
+	if (game.world->playerHandler->currentNode)
+		game.world->playerHandler->currentNode->draw(window);
 }

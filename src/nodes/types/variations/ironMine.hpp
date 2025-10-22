@@ -2,13 +2,12 @@
 
 class IronMine : public Producer {
 public:
-	
 	IronMine(sf::Texture& texture, NodeManager& nodeManager) 
-		: Producer(texture, nodeManager, 0, 1) {
-		resource = Resource::Iron;
-		generationRate = 2;
-		outputRate = 3;
-		capacity = 20;
+		: Producer(texture, nodeManager, Resource::Iron, 0, 1) {
+		generationRate = 30;
+		outputRate = 20;
+		capacity = 500;
+		nameText.setString("Iron mine");
 	}
 private:
 

@@ -1,8 +1,14 @@
-#include "nodes/node.hpp"
-#include "nodes/nodeInfo.hpp"
+#pragma once
+#include "node.hpp"
 
 class NodeManager;
 class World;
+class Game;
+
+enum struct NodeType {
+	Producer,
+	Converter
+};
 
 struct Connection {
 	Node* fromNode;
@@ -25,9 +31,10 @@ public:
 	NodeManager();
 	void createConnection(Node* nA, Node* nB, Port* pA, Port* pB);
 	void removeConnection(Connection* connection);
-	void update(sf::Time deltaTime);
+	void update(sf::Time deltaTime, sf::RenderWindow& window);
+	void onEvent(sf::Event& event, sf::RenderWindow& window, World& world);
 	void updateNode(Node* node);
-	void onEvent(sf::Event& event, World& world);
+	void draw(sf::RenderWindow& window, Game& game);
 	std::vector<Connection*> getNodeConnections(Node* node) const;
 
 	std::vector<std::unique_ptr<Node>> nodes;
@@ -35,5 +42,4 @@ public:
 	sf::Font font;
 private:
 	sf::Texture temp;
-	NodeInfo nodeInfo;
 };
