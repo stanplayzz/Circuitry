@@ -1,5 +1,7 @@
 #include "game.hpp"
 
+#include <print>
+
 Game::Game() : fps(font) {
 	window.create(sf::VideoMode({ 1280, 720 }), "I'll change this later", sf::Style::Close);
 	uiView = window.getDefaultView();
@@ -35,7 +37,7 @@ void Game::run() {
 		
 		world->update(window, deltaTime);
 
-		window.clear(sf::Color(75, 75, 200));
+		window.clear(sf::Color(49, 51, 73));
 
 		world->draw(window, *this);
 		window.setView(uiView);

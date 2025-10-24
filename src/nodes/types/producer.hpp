@@ -7,8 +7,14 @@ enum struct NodeType;
 
 class Producer : public Node {
 public:
-	Producer(sf::Texture& texture, NodeManager& nodeManager, Resource resource, int iPorts = 0, int oPorts = 1)
-		: Node(texture, nodeManager, iPorts, oPorts), resource(resource) {
+	Producer(NodeManager& nodeManager, Resource resource, int iPorts = 0, int oPorts = 1)
+		: Node(nodeManager, iPorts, oPorts), resource(resource) {
+
+		if (!backgroundTexture.loadFromFile(ASSETS_DIR + std::string("/textures/ProducerBG.png"))) {
+			throw std::runtime_error("Failed to load texture");
+		}
+		background.setTexture(&backgroundTexture);
+		titleBackground.setFillColor(sf::Color(16, 101, 137));
 	}
 	void update(sf::Time deltaTime) {
 		if (inWorld) {
@@ -18,15 +24,10 @@ public:
 					progress -= sf::seconds(1);
 					if (quantity >= capacity || quantity + generationRate > capacity) {
 						quantity += capacity - quantity;
-						quantityText.setFillColor(sf::Color::Red);
 					}
 					else {
 						quantity += generationRate;
-						quantityText.setFillColor(sf::Color(200, 200, 200));
 					}
-					quantityText.setString(std::to_string(quantity));
-					auto bounds = quantityText.getLocalBounds();
-					quantityText.setOrigin({ bounds.size / 2.f });
 					for (auto& connection : nodeManager.connections) {
 						if (connection.fromNode == this) {
 							auto amount = outputRate;
@@ -35,10 +36,7 @@ public:
 							}
 							if (connection.toNode->recieve(resource, amount)) {
 								quantity -= amount;
-								quantityText.setString(std::to_string(quantity));
 							}
-
-							quantityText.setFillColor(sf::Color(200, 200, 200));
 						}
 					}
 				}
@@ -46,18 +44,11 @@ public:
 		}
 		else {
 			quantity = 0;
-			quantityText.setString("");
 		}
 	}
 
 	bool recieve(Resource& resource, int amount) override {
 		return false;
-	}
-	void setDerivedPosition(sf::Vector2f position) override {
-
-	}
-	void drawDerived(sf::RenderWindow& window) override {
-
 	}
 
 protected:
@@ -66,7 +57,6 @@ protected:
 	int capacity = 0;
 	Resource resource;
 private:
-
 	sf::Time progress;
 	int quantity = 0;
 };

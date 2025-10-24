@@ -7,11 +7,10 @@
 #include <print>
 
 NodeManager::NodeManager() {
-	temp.loadFromFile(ASSETS_DIR + std::string("/textures/machine.png"));
 	font.openFromFile(ASSETS_DIR + std::string("/fonts/Roboto.ttf"));
-	nodes.push_back(std::make_unique<IronMine>(temp, *this));
-	nodes.push_back(std::make_unique<IronMine>(temp, *this));
-	nodes.push_back(std::make_unique<Smelter>(temp, *this));
+	nodes.push_back(std::make_unique<IronMine>(*this));
+	nodes.push_back(std::make_unique<IronMine>(*this));
+	nodes.push_back(std::make_unique<Smelter>(*this));
 }
 
 void NodeManager::createConnection(Node* nA, Node* nB, Port* pA, Port* pB) {

@@ -16,13 +16,13 @@ public:
 	sf::View view;
 
 	float currentZoom = 1.f;
+	sf::Vector2f originalViewSize;
 private:
 	sf::Font font;
 	sf::Text fps;
 
 	sf::Vector2i prevMouse;
 	bool panning = false;
-	sf::Vector2f originalViewSize;
 
 	void run();
 	void handleInput();

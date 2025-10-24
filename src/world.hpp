@@ -22,4 +22,8 @@ public:
 	NodeManager nodeManager;
 private:
 	sf::VertexArray grid;
+
+	sf::RectangleShape testShape{ { 100.f, 100.f } };
+	sf::Shader testShader;
+	sf::Texture testTexture;
 };

@@ -1,5 +1,6 @@
 #include "game.hpp"
 #include "world.hpp"
+#include <UltimateShapes/shapes.hpp>
 
 auto gridColor = sf::Color(255, 255, 255, 25);
 

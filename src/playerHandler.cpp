@@ -36,18 +36,11 @@ void PlayerHandler::onEvent(sf::Event& event, sf::RenderWindow& window, World& w
 					if (overPort) break;
 
 					if (node->contains(mousePos)) {
-						Converter* converter = dynamic_cast<Converter*>(node.get());
-						if (converter && converter->configureButton.getGlobalBounds().contains(mousePos)) {
-							converter->toggleConfig();
-							break;
-						}
-						else {
-							currentNode = node.get();
-							dragging = true;
-							node->dragging = true;
-							dragOffset = mousePos - currentNode->getPosition();
-							break;
-						}
+						currentNode = node.get();
+						dragging = true;
+						node->dragging = true;
+						dragOffset = mousePos - currentNode->getPosition();
+						break;
 					}
 				}
 				else {
