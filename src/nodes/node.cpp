@@ -38,7 +38,7 @@ void Node::setPosition(sf::Vector2f position) {
 	background.setPosition(position);
 	titleBackground.setPosition(position);
 	auto offset = (size.x - 512.f * image.getScale().x) / 2.f;
-	image.setPosition(position + sf::Vector2f(offset, offset + 20.f));
+	image.setPosition(position + size / 2.f - image.getGlobalBounds().size / 2.f);
 
 	titleText.setOrigin(titleText.getLocalBounds().position + titleText.getLocalBounds().size / 2.f);
 	titleText.setPosition(position + titleBackground.getGeometricCenter());

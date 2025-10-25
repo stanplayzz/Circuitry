@@ -12,7 +12,7 @@ class World {
 public:
 	World(Game& game);
 	void update(sf::RenderWindow& window, sf::Time deltaTime);
-	void onEvent(sf::Event& event, sf::RenderWindow& window);
+	void onEvent(sf::Event& event, sf::RenderWindow& window, Game& game, sf::View& worldView);
 	void draw(sf::RenderWindow& window, Game& game);
 
 	float tile_size = 32.f;
@@ -22,8 +22,7 @@ public:
 	NodeManager nodeManager;
 private:
 	sf::VertexArray grid;
-
-	sf::RectangleShape testShape{ { 100.f, 100.f } };
-	sf::Shader testShader;
-	sf::Texture testTexture;
+	bool panning = false;
+	sf::Vector2i prevMouse{};
+	float currentZoom = 1.f;
 };

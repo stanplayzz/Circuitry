@@ -38,8 +38,8 @@ public:
 
 	void closeAll(sf::RenderWindow& window);
 	void update(sf::Time deltaTime, World& world);
-	void onEvent(sf::Event& event, sf::RenderWindow& window);
-	void draw(sf::RenderWindow& window, Game& game);
+	void onEvent(sf::Event& event, sf::RenderWindow& window, Game& game);
+	void draw(sf::RenderWindow& window, Game& game, World& world);
 
 	std::unique_ptr<Menu> menu;
 	std::unique_ptr<Inventory> inventory;

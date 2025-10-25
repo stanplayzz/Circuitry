@@ -1,9 +1,12 @@
 #include "menu.hpp"
 #include "../game.hpp"
+#include "../states/mainMenuState.hpp"
 
 Menu::Menu(Game& game, Toolbar& toolbar)
 	: button(toolbar.font, sf::Vector2f(toolbar.buttonWidth, toolbar.toolbarHeight), "Menu"),
-	  quitButton(toolbar.font, sf::Vector2f(toolbar.buttonWidth * 2.f, toolbar.toolbarHeight), "Quit To Desktop") {
+	  quitButton(toolbar.font, sf::Vector2f(toolbar.buttonWidth * 2.f, toolbar.toolbarHeight), "Quit To Desktop"),
+	  quitToMainMenuButton(toolbar.font, sf::Vector2f(toolbar.buttonWidth * 2.f, toolbar.toolbarHeight), "Quit To Main Menu") {
+	menuButtons.push_back(&quitToMainMenuButton);
 	menuButtons.push_back(&quitButton);
 
 	menu.setSize({ toolbar.buttonWidth * 2.f, toolbar.toolbarHeight * menuButtons.size() + toolbar.toolbarHeight });
@@ -39,7 +42,7 @@ void Menu::update(sf::Time deltaTime, World& world) {
 	}
 }
 
-void Menu::onEvent(sf::Event& event, sf::RenderWindow& window, Toolbar& toolbar) {
+void Menu::onEvent(sf::Event& event, sf::RenderWindow& window, Toolbar& toolbar, Game& game) {
 	for (auto& button : menuButtons) {
 		button->onHover(window);
 	}
@@ -57,6 +60,9 @@ void Menu::onEvent(sf::Event& event, sf::RenderWindow& window, Toolbar& toolbar)
 
 	if (quitButton.isPressed(event) && canClick) {
 		window.close();
+	}
+	if (quitToMainMenuButton.isPressed(event) && canClick) {
+		game.stateManager.switchState(std::make_unique<MainMenu::MainMenuState>(game));
 	}
 }
 

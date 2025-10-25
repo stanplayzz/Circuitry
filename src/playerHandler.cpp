@@ -64,7 +64,7 @@ void PlayerHandler::onEvent(sf::Event& event, sf::RenderWindow& window, World& w
 
 				if (!world.toolbar->inventory->inventory.getGlobalBounds().contains(uiMousePos)) {
 					const float padding = 32.f;
-					const float tile = game.world->tile_size;
+					const float tile = world.tile_size;
 
 					sf::Vector2f gridPos(
 						std::round((mousePos.x - dragOffset.x) / tile) * tile,

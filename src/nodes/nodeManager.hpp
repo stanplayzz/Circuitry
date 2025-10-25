@@ -34,7 +34,7 @@ public:
 	void update(sf::Time deltaTime, sf::RenderWindow& window);
 	void onEvent(sf::Event& event, sf::RenderWindow& window, World& world);
 	void updateNode(Node* node);
-	void draw(sf::RenderWindow& window, Game& game);
+	void draw(sf::RenderWindow& window, World& world);
 	std::vector<Connection*> getNodeConnections(Node* node) const;
 
 	std::vector<std::unique_ptr<Node>> nodes;

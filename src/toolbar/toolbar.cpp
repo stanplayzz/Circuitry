@@ -60,19 +60,19 @@ void Toolbar::update(sf::Time deltaTime, World& world) {
 	inventory->update(deltaTime, world);
 }
 
-void Toolbar::onEvent(sf::Event& event, sf::RenderWindow& window) {
+void Toolbar::onEvent(sf::Event& event, sf::RenderWindow& window, Game& game) {
 	
 	for (auto& button: buttons) {
 		button->onHover(window);
 	}
-	menu->onEvent(event, window, *this);
 	inventory->onEvent(event, window, *this);
+	menu->onEvent(event, window, *this, game);
 }
 
-void Toolbar::draw(sf::RenderWindow& window, Game& game) {
+void Toolbar::draw(sf::RenderWindow& window, Game& game, World& world) {
 	window.setView(game.uiView);
 
-	inventory->draw(window, game.world->nodeManager);
+	inventory->draw(window, world.nodeManager);
 	menu->draw(window);
 	window.draw(toolbar);
 	for (auto& button : buttons) {

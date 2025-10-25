@@ -15,6 +15,11 @@ struct Converter : public Node {
 
 	Converter(NodeManager& nodeManager, Resource resource, int iPorts = 1, int oPorts = 1) 
 		: Node(nodeManager, iPorts, oPorts), resource(resource) {
+		if (!backgroundTexture.loadFromFile(ASSETS_DIR + std::string("/textures/ConverterBG.png"))) {
+			throw std::runtime_error("Failed to load texture");
+		}
+		background.setTexture(&backgroundTexture);
+		titleBackground.setFillColor(sf::Color(127, 77, 26));
 	}
 
 	void update(sf::Time deltaTime) {

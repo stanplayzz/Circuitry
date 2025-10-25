@@ -138,12 +138,12 @@ void NodeManager::update(sf::Time deltaTime, sf::RenderWindow& window) {
 void NodeManager::onEvent(sf::Event& event, sf::RenderWindow& window, World& world) {
 }
 
-void NodeManager::draw(sf::RenderWindow& window, Game& game) {
+void NodeManager::draw(sf::RenderWindow& window, World& world) {
 	for (auto& connection : connections) {
 		connection.draw(window);
 	}
 	for (auto& node : nodes) {
-		if (node->inWorld && game.world->playerHandler->currentNode != node.get()) {
+		if (node->inWorld && world.playerHandler->currentNode != node.get()) {
 			node->draw(window);
 		}
 	}
