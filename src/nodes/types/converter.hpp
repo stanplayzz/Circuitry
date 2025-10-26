@@ -5,8 +5,6 @@
 
 #include <exception>
 
-enum struct NodeType;
-
 struct Converter : public Node {
 	Resource resource;
 	int outputRate = 1;

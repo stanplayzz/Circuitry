@@ -14,6 +14,8 @@ public:
 	void update(sf::RenderWindow& window, sf::Time deltaTime);
 	void onEvent(sf::Event& event, sf::RenderWindow& window, Game& game, sf::View& worldView);
 	void draw(sf::RenderWindow& window, Game& game);
+	void save();
+	void load();
 
 	float tile_size = 32.f;
 	sf::Vector2i world_grid_size = sf::Vector2i(100, 100);

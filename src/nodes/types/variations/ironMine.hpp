@@ -15,6 +15,7 @@ public:
 		outputRate = 20;
 		capacity = 500;
 		titleText.setString("Iron mine");
+		nodeType = NodeType::IronMine;
 	}
 private:
 

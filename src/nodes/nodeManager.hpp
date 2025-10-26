@@ -1,14 +1,11 @@
 #pragma once
 #include "node.hpp"
 
+#include <deque>
+
 class NodeManager;
 class World;
 class Game;
-
-enum struct NodeType {
-	Producer,
-	Converter
-};
 
 struct Connection {
 	Node* fromNode;
@@ -37,7 +34,7 @@ public:
 	void draw(sf::RenderWindow& window, World& world);
 	std::vector<Connection*> getNodeConnections(Node* node) const;
 
-	std::vector<std::unique_ptr<Node>> nodes;
+	std::deque<std::unique_ptr<Node>> nodes;
 	std::vector<Connection> connections;
 	sf::Font font;
 private:

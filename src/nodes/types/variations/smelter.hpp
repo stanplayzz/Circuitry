@@ -7,6 +7,7 @@ public:
 		outputRate = 1;
 		capacity = 500;
 		titleText.setString("Smelter");
+		nodeType = NodeType::Smelter;
 	}
 private:
 

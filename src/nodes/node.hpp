@@ -7,7 +7,11 @@
 
 class Node;
 class NodeManager;
-enum struct NodeType;
+
+enum struct NodeType {
+	IronMine,
+	Smelter
+};
 
 struct Port {
 	sf::Vector2f offset{};
@@ -23,6 +27,7 @@ public:
 	bool dragging = false;
 	sf::Vector2f size{128.f, 192.f};
 	std::vector<Port> ports;
+	NodeType nodeType;
 
 	Node(NodeManager& nodeManager, const int iPorts = 0, const int oPorts = 0 );
 	void setPosition(sf::Vector2f position);
@@ -42,5 +47,4 @@ protected:
 	sf::Texture texture;
 	sf::Sprite image;
 	sf::Text titleText;
-private:
 };

@@ -3,8 +3,6 @@
 
 #include <exception>
 
-enum struct NodeType;
-
 class Producer : public Node {
 public:
 	Producer(NodeManager& nodeManager, Resource resource, int iPorts = 0, int oPorts = 1)

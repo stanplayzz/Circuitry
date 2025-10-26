@@ -5,6 +5,7 @@
 #include "../game.hpp"
 
 #include <print>
+#include <fstream>
 
 NodeManager::NodeManager() {
 	font.openFromFile(ASSETS_DIR + std::string("/fonts/Roboto.ttf"));
